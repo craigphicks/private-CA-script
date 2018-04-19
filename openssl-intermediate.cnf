@@ -13,7 +13,7 @@ crl_dir           = $dir/crl
 new_certs_dir     = $dir/newcerts
 database          = $dir/index.txt
 serial            = $dir/serial
-RANDFILE          = $dir/private/.rand
+#RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
 private_key       = $dir/private/intermediate.key.pem
@@ -32,7 +32,7 @@ name_opt          = ca_default
 cert_opt          = ca_default
 default_days      = 375
 preserve          = no
-policy            = policy_loose
+#policy            = policy_strict
 
 [ policy_strict ]
 # The root CA should only sign intermediate certificates that match.
@@ -65,7 +65,7 @@ string_mask         = utf8only
 default_md          = sha256
 
 # Extension to add when the -x509 option is used.
-x509_extensions     = v3_intermediate_ca
+#x509_extensions     = v3_ca
 
 [ req_distinguished_name ]
 # See <https://en.wikipedia.org/wiki/Certificate_signing_request>.
@@ -81,10 +81,10 @@ emailAddress                    = Email Address
 countryName_default             = US
 stateOrProvinceName_default     = XXX
 localityName_default            =
-0.organizationName_default      = Pinder
+0.organizationName_default      = MyOrgName
 organizationalUnitName_default  =
 emailAddress_default            =
-commonName_default              = my.intermediate                    
+#commonName_default              = my.intermediate                    
 
 [ v3_ca ]
 # Extensions for a typical CA (`man x509v3_config`).

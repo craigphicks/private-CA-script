@@ -29,9 +29,9 @@ ca_builder()
     function finish {
         local ec=$?
         if [[ $ec -eq 0 ]]; then
-            echo "finished - Success"
+            echo "finished - Success" >&2
         else
-            echo "finished - Failure"
+            echo "finished - Failure" >&2
         fi
         exit 0
     }
