@@ -17,13 +17,13 @@ ca_builder()
     local TopDir=/etc/ssl/MyOrg-CA
     local CaIdent=ca-1
     local CaRoot=$TopDir/$CaIdent
-    local ImedIdent=imed-1
+    local ImedIdent=imed-2
     local ImedRoot=$CaRoot/$ImedIdent
     local ProtoConfDir=.                   #included with this script
     local MyOrg="MyOrg"
     local SharedSubj="/C=US/ST=XXX/O=$MyOrg"
     local CaSubj="$SharedSubj/CN=$MyOrg.$CaIdent"
-    local ImedSubj="$SharedSubj/CN=$MyOrg.$ImedIdent"
+    local ImedSubj="$SharedSubj/CN=$MyOrg.$CaIdent.$ImedIdent"
     
     
     function finish {
@@ -177,8 +177,8 @@ openssl verify -CAfile $CaRoot/certs/$CaIdent.cert.pem \
 EOF_
 
         cat $ImedRoot/certs/$ImedIdent.cert.pem \
-            $CaRoot/certs/$CaIdent.cert.pem > $ImedRoot/certs/$ImedIdent.$CaIdent.chain.cert.pem
-        chmod 444 $ImedRoot/certs/$ImedIdent.$CaIdent.chain.cert.pem
+            $CaRoot/certs/$CaIdent.cert.pem > $ImedRoot/certs/$CaIdent.$ImedIdent.chain.cert.pem
+        chmod 444 $ImedRoot/certs/$CaIdent.$ImedIdent.chain.cert.pem
     }
 
     make_usr_cert() #arg $1: unique identifier
@@ -198,7 +198,7 @@ EOF_
 openssl genrsa -out $ImedRoot/private/$Id.key.pem 2048 # -aes256 left out, no password used
 chmod 400 $ImedRoot/private/$Id.key.pem
 openssl req -batch -config $ImedRoot/openssl-intermediate.cnf \
- -subj "/CN=$Id" \
+ -subj "/CN=$CaIdent.$ImedIdent.$Id" \
  -key $ImedRoot/private/$Id.key.pem \
  -new -sha256 -out $ImedRoot/csr/$Id.csr.pem
 
@@ -218,7 +218,7 @@ openssl x509 -noout -text \
  -in $ImedRoot/certs/$Id.cert.pem
 
 # Verify chain of trust
-openssl verify -CAfile $ImedRoot/certs/$ImedIdent.$CaIdent.chain.cert.pem \
+openssl verify -CAfile $ImedRoot/certs/$CaIdent.$ImedIdent.chain.cert.pem \
  $ImedRoot/certs/$Id.cert.pem
 
 # Make the pkcs12 format data (cert+key) for browser (client) use
