@@ -1,11 +1,11 @@
 #!/bin/bash
-
+set -x
 set -euo pipefail
 
-if [[ ${#@} -ne 1 ]]; then
-    echo "USAGE $0 <user>@<remote-machine>:<dirpath>"
-    exit 1
-fi
+# if [[ ${#@} -ne 1 ]]; then
+#     echo "USAGE $0 <user>@<remote-machine>:<dirpath>"
+#     exit 1
+# fi
 
 read filepath < <(./ca_builder.sh ca-chain-filepath 2>/dev/null) 
 filedir=`dirname "${filepath}"`

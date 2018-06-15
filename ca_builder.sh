@@ -258,7 +258,7 @@ EOF_
         ls -l  $ImedRoot/certs/$1.certandkey.p12
         ls -l  $ImedRoot/private/$1.certandkey.p12.pw
         echo "The chain of certs for the recipient of client cert (e.g. nginx server)"
-        ls -l  $ImedRoot/certs/$ImedIdent.$CaIdent.chain.cert.pem
+        ls -l  $ImedRoot/certs/$CaIdent.$ImedIdent.chain.cert.pem
         echo "NOTE: You might consider storing these passwords in a pw manager and deleting the files: ($0 show_passwords to show password text values)"
         ls -l  $CaRoot/private/*.pw
         ls -l  $ImedRoot/private/*.pw       
@@ -272,14 +272,17 @@ EOF_
     show_all_passwords()
     {
         find $TopDir -name *.pw -exec ls -l {} \; -exec cat {} \;
-        find $TopDir -name *.12 -exec ls -l {} \; -exec ls -l {} \;
+    }
+    delete_all_passwords()
+    {
+        find $TopDir -name *.pw -exec ls -l {} \; -exec rm -f {} \;
     }
     # find /etc/ssl/MyOrg-CA -name *.pw -exec echo {} \; -exec cat {} \;
     # find /etc/ssl/MyOrg-CA -name *.pw -exec echo {} \; -exec rm {} \;
 
     ca_chain_filepath()
     {
-        echo "$ImedRoot/certs/$ImedIdent.$CaIdent.chain.cert.pem"
+        echo "$ImedRoot/certs/$CaIdent.$ImedIdent.chain.cert.pem"
     }
     usr_cert_filepath() # $1 id
     {
@@ -371,6 +374,10 @@ EOF_
         show-all-passwords)
             checkroot
             show_all_passwords;
+            ;;
+        delete-all-passwords)
+            checkroot
+            delete_all_passwords;
             ;;
         ca-chain-filepath)
             ca_chain_filepath
